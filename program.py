@@ -3,6 +3,8 @@
 
 import turtle
 import time
+from pprint import pprint
+
 import board_calculator
 
 polygon_angle = 120
@@ -22,23 +24,13 @@ def draw_board(turtle_board, calced_board):
             turtle_board.setx(0)
 
 
-def draw_triangle(turtle_board, x, y, val):
-    turtle_board.pendown()
-    turtle_board.write(val)
-    turtle_board.forward(polygon_base)
-    turtle_board.left(polygon_angle)
-    # turtle_board.write(second_number)
-    # turtle_board.forward(polygon_base)
-    # turtle_board.left(polygon_angle)
-    # turtle_board.write(third_number)
-    # turtle_board.forward(polygon_base)
-    # turtle_board.left(polygon_angle)
-    # turtle_board.forward(polygon_base)
-
-
 def draw_hexagon(val: int, turtle_board: turtle.Turtle) -> None:
     hexagon_side = 57.735
-    turtle_board.write(val)
+    if val == None:
+        turtle_board.write('')
+    else:
+        valstr = f'{val[0]}, {val[2]}'
+        turtle_board.write(valstr)
     turtle_board.penup()
 
     turtle_board.forward(50)
@@ -58,6 +50,7 @@ def draw_hexagon(val: int, turtle_board: turtle.Turtle) -> None:
 
 def main():
     calced_board = board_calculator.calculate_weights()
+    pprint(calced_board)
     turtle_board = turtle.Turtle()
     draw_board(turtle_board, calced_board)
     time.sleep(4000)
