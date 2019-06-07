@@ -1,8 +1,55 @@
 import random
 from pprint import pprint
 
-LOWER_BOUND = 6
-UPPER_BOUND = 8
+da = [
+    # how to solve the weight problem, actually use weights, not the actual numbers, 12 doesnt have a weight of 12 but 1,
+    # 6 has a weight of 5, so does 8, so let the program find its numbers and calc the weight instead of the avg of the numbers
+    # i think this matrix is wrong because i could just not double the numbers and use the numbers once
+    # doing it this way would eliminate the need for the numbers list from the start but kills the usability if we would
+    # like to change the numbers list
+    # TODO: let python auto calc the weight (add up second column of da and divide by number of rows) Ulimit +0.5 Llimit -0.5 Done
+    # TODO: let python get random numbers and calc with the weight of the number to see if it is a good spot
+    [2, 1],
+    [2, 1],
+    [3, 2],
+    [3, 2],
+    [3, 2],
+    [4, 3],
+    [4, 3],
+    [4, 3],
+    [4, 3],
+    [5, 4],
+    [5, 4],
+    [5, 4],
+    [5, 4],
+    [5, 4],
+    [6, 5],
+    [6, 5],
+    [6, 5],
+    [6, 5],
+    [6, 5],
+    [6, 5],
+    [8, 5],
+    [8, 5],
+    [8, 5],
+    [8, 5],
+    [8, 5],
+    [8, 5],
+    [9, 4],
+    [9, 4],
+    [9, 4],
+    [9, 4],
+    [9, 4],
+    [10, 3],
+    [10, 3],
+    [10, 3],
+    [10, 3],
+    [11, 2],
+    [11, 2],
+    [11, 2],
+    [12, 1],
+    [12, 1]
+]
 
 dm = [[(-1, 0), (-1, -1)],
       [(-1, -1), (0, -1)],
@@ -10,6 +57,16 @@ dm = [[(-1, 0), (-1, -1)],
       [(1, -1), (1, 0)],
       [(1, 0), (0, 1)],
       [(0, 1), (-1, 0)]]
+
+total_val = 0
+
+for n, w in enumerate(da):
+    weight = da[n][1]
+    total_weight = total_weight + weight
+
+avg_weight = total_val/n
+UPPER_BOUND = avg_weight + 0.5
+LOWER_BOUND = avg_weight - 0.5
 
 
 def check_constraint(x, y, val, m):
@@ -40,7 +97,8 @@ def calculate_weights():
                 continue
             tries = 0
             while tries < 100:
-                val = random.choice(weights_list)
+                tuple_val = random.choice(da)
+                val = tuple_val[1]
                 try:
                     check_constraint(x, y, val, m)
                 except ValueError:
@@ -50,8 +108,8 @@ def calculate_weights():
             else:
                 print('fail')
                 return calculate_weights()
-            m[x][y] = val
-            weights_list.remove(val)
+            #m[x][y] = val
+            da.remove(tuple_val)
     return m
 
 #
