@@ -1,9 +1,8 @@
-import board_calculator
-
-m = [[[9, 4], [6, 5], [10, 3], [9, 4], [11, 2], [8, 5], [12, 1], [8, 5]],
-     [None, [11, 2], [4, 3], [9, 4], [4, 3], None, [10, 3], [8, 5]],
-     [[8, 5], [9, 4], None, [9, 4], [11, 2], [10, 3], [3, 2], [5, 4]],
-     [None, [12, 1], [4, 3], [6, 5], [3, 2], None, [6, 5], [5, 4]],
-     [[10, 3], [5, 4], [2, 1], [5, 4], [5, 4], [6, 5], [2, 1], [4, 3]]]
-
-board_calculator.check_constraint(4, 7, 5, m)
+import turtle
+t=turtle.Turtle()
+t.fillcolor('blue')
+t.begin_fill()
+for i in range(4):
+     t.forward(150)
+     t.right(90)
+t.end_fill()

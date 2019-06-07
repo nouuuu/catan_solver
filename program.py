@@ -28,24 +28,43 @@ def draw_hexagon(val: int, turtle_board: turtle.Turtle) -> None:
     hexagon_side = 57.735
     if val == None:
         turtle_board.write('')
+        turtle_board.penup()
+        turtle_board.forward(50)
+        turtle_board.pendown()
+        turtle_board.left(90)
+        turtle_board.forward(hexagon_side / 2)
+        turtle_board.fillcolor('brown')
+        turtle_board.begin_fill()
+        for i in range(0, 5):
+            turtle_board.left(60)
+            turtle_board.forward(hexagon_side)
+        turtle_board.end_fill()
+        turtle_board.left(60)
+        turtle_board.forward(hexagon_side / 2)
+        turtle_board.penup()
+        turtle_board.left(270)
+        turtle_board.forward(50)
+        turtle_board.pendown()
     else:
         valstr = f'{val[0]}, {val[2]}'
         turtle_board.write(valstr)
-    turtle_board.penup()
-
-    turtle_board.forward(50)
-    turtle_board.pendown()
-    turtle_board.left(90)
-    turtle_board.forward(hexagon_side / 2)
-    for i in range(0, 5):
+        turtle_board.penup()
+        turtle_board.forward(50)
+        turtle_board.pendown()
+        turtle_board.left(90)
+        turtle_board.forward(hexagon_side / 2)
+        for i in range(0, 5):
+            turtle_board.left(60)
+            turtle_board.forward(hexagon_side)
         turtle_board.left(60)
-        turtle_board.forward(hexagon_side)
-    turtle_board.left(60)
-    turtle_board.forward(hexagon_side / 2)
-    turtle_board.penup()
-    turtle_board.left(270)
-    turtle_board.forward(50)
-    turtle_board.pendown()
+        turtle_board.forward(hexagon_side / 2)
+        turtle_board.penup()
+        turtle_board.left(270)
+        turtle_board.forward(50)
+        turtle_board.pendown()
+
+
+
 
 
 def main():
