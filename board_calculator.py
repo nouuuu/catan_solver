@@ -67,8 +67,8 @@ def check_constraint(x, y, val, m, dm):
         try:
             _, dm1, _ = m[x + dx1][y + dy1]  # _ means this value exists but ignore it
             _, dm2, _ = m[x + dx2][y + dy2]
-        except (IndexError,
-                TypeError):  # indexerror this is for ignoring the sides and top of the board with the dm-matrixs, TypeError is to ignore the 0's in the matrix because there isnt a tuple there yet
+        except (IndexError, TypeError):  # IndexError: don't check if a value doesn't exist,
+            # TypeError is to ignore the 0's in the matrix because there isn't a tuple there yet
             continue
         if not (val):  # this is to ignore the check if there is a 0 in val, then it just fills in a number
             continue
@@ -82,13 +82,12 @@ def calculate_weights():
          [None, 0, 0, 0, 0, None, 0, 0],  # x 1
          [0, 0, None, 0, 0, 0, 0, 0],  # x 2
          [None, 0, 0, 0, 0, None, 0, 0],  # x 3
-         [0, 0, 0, 0, 0, 0, 0, 0]]
+         [0, 0, 0, 0, 0, 0, 0, 0]]  # x 4
     local_number_cards = deepcopy(number_cards)
     for row_index, x_list in enumerate(
-            m):  # go through rows from top to bottom row_index is the index of the row, x_list is the whole row with data
-        for column_index, val in enumerate(
-                x_list):  # go trough columns from left to right column_index is the index of the column, val is the value of the cell
-            row_dm = row_index % 2 != 0 and dm_short_row or dm_long_row  # shorthand if statement with check for even/odd rows
+            m):  # go through rows from top to bottom, x_list is the whole row with data
+        for column_index, val in enumerate(x_list):  # loop columns from left to right, val is the value of the cell
+            row_dm = row_index % 2 != 0 and dm_short_row or dm_long_row  # select correct dm for even/odd rows
             if val is None:
                 continue
             tries = 0
@@ -96,11 +95,11 @@ def calculate_weights():
                 num, val, letter = random.choice(local_number_cards)
                 try:
                     check_constraint(row_index, column_index, val, m, row_dm)
-                except ValueError:  # this ValueError is if the check_constraints fails, then he picks a new random number from the list
+                except ValueError:  # thrown if the check_constraints fails, then a new random value is tried
                     tries += 1
-                else:  # if try succeeds break this cycle and continue to setting value
+                else:  # if try succeeds break the outer while loop and continue to setting value
                     break
-            else:  # if the loop has run over its max trys the board is unsolvable and it will start from an empty matrix again with new values
+            else:  # if the loop has run over its max tries the board is unsolvable and we retry with a clean board
                 print('fail')
                 return calculate_weights()
             m[row_index][column_index] = [num, val, letter]  # fill in the value in the final matrix
