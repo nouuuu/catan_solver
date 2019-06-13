@@ -24,9 +24,9 @@ def draw_board(turtle_board, calced_board):
             turtle_board.setx(0)
 
 
-def draw_hexagon(val: int, turtle_board: turtle.Turtle) -> None:
+def draw_hexagon(val, turtle_board: turtle.Turtle) -> None:
     hexagon_side = 57.735
-    if val == None:
+    if val is None:
         turtle_board.write('')
     else:
         valstr = f'{val[0]}, {val[2]}'
