@@ -141,6 +141,7 @@ def calculate_tiles():
         for column_index, val in enumerate(x_list):  # loop columns from left to right, val is the value of the cell
             row_dm = row_index % 2 != 0 and dm_short_row or dm_long_row  # select correct dm for even/odd rows
             if val is None:
+                local_tiles[row_index][column_index]='desert'
                 continue
             tries = 0
             while tries < 1000:
