@@ -20,14 +20,14 @@ class BoardDrawing(object):
         self.file_name = "catan_board.svg"
         self.numbers = np.array(self._fill_sea(number_matrix))
         self.tiles = np.array(self._fill_sea(tile_layout, filler="Be"))
-        print(self.tiles)
         if self.numbers.shape != self.tiles.shape:
             raise ValueError("Tile layout an number layout do not match")
         self.shape = self.numbers.shape
         self.drawing = draw.Drawing(self.shape[1] * self.TILE_SIZE + self.TILE_SIZE / 2 + 2 * self.STROKE,
-                                    self.shape[0] * self.TILE_SIZE * 0.75 + self.TILE_SIZE * 0.25 + 2 * self.STROKE)
-        self.drawing.viewBox = (self.TILE_SIZE / 4, self.TILE_SIZE / 2, self.drawing.width + self.TILE_SIZE / 2,
-                                self.drawing.height + self.TILE_SIZE / 2)
+                                    self.shape[0] * self.TILE_SIZE * 0.75 + self.TILE_SIZE * 0.25 + 2 * self.STROKE,
+                                    overflow="hidden")
+        self.drawing.viewBox = (self.TILE_SIZE / 4, self.TILE_SIZE / 2, self.drawing.width - self.TILE_SIZE,
+                                self.drawing.height - self.TILE_SIZE / 2)
         self._init_tile_images()
 
     def generate_board_outline(self):
@@ -61,7 +61,7 @@ class BoardDrawing(object):
     def _draw_number(self, x, y, val):
         text = draw.Text(str(val), self.FONT_SIZE, x + self.TILE_SIZE / 2, -(y + self.TILE_SIZE / 2), center=True)
         c_offset = self.TILE_SIZE / 2 + 3
-        circle = draw.Circle(x + c_offset -3, -(y + c_offset), r=self.FONT_SIZE * 0.75, fill="white", stroke="black")
+        circle = draw.Circle(x + c_offset - 3, -(y + c_offset), r=self.FONT_SIZE * 0.75, fill="white", stroke="black")
         return [circle, text]
 
     def get_hexagon_coords(self, x, y):
