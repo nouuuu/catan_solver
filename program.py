@@ -47,7 +47,7 @@ def draw_hexagon(val, turtle_board: turtle.Turtle) -> None:
         turtle_board.pendown()
     else:
         valstr = f'{val[0]}, {val[2]}'
-        turtle_board.write(valstr)
+        turtle_board.write(valstr, font=('Arial', 12, 'normal'))
         turtle_board.penup()
         turtle_board.forward(50)
         turtle_board.pendown()
@@ -71,6 +71,7 @@ def main():
     calced_board = board_calculator.calculate_weights()
     pprint(calced_board)
     turtle_board = turtle.Turtle()
+    turtle_board.pensize(3)
     draw_board(turtle_board, calced_board)
     time.sleep(4000)
 

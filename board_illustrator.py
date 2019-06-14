@@ -7,13 +7,13 @@ class BoardDrawing(object):
     STROKE = 2
     FONT_SIZE = 25
     TILES = {
-        "B": "img/production/Brick_med.png",
-        "D": "img/production/Desert_med.png",
-        "O": "img/production/Ore_med.png",
-        "S": "img/production/Sheep_med.png",
-        "Wh": "img/production/Wheat_med.png",
-        "Wo": "img/production/Wood_med.png",
-        "Be": "img/production/Ocean_med.png"
+        "brick": "img/production/Brick_med.png",
+        "desert": "img/production/Desert_med.png",
+        "ore": "img/production/Ore_med.png",
+        "sheep": "img/production/Sheep_med.png",
+        "wheat": "img/production/Wheat_med.png",
+        "wood": "img/production/Wood_med.png",
+        "ocean": "img/production/Ocean_med.png"
     }
 
     def __init__(self, number_matrix, tile_layout):

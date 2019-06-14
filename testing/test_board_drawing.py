@@ -6,7 +6,10 @@ from board_illustrator import BoardDrawing
 
 
 def test_board_drawing():
-    board = BoardDrawing([[0, 2, 3, 4], [1, 2, None, 4], [1, 2, 3, 4], [1, 2, None, 4]],
+    board = BoardDrawing([[0, 2, 3, 4],
+                          [1, 2, None, 4],
+                          [1, 2, 3, 4],
+                          [1, 2, None, 4]],
                          [["D", 'Wo', 'Wh', 'O'],
                           ['B', 'S', 'Wh', 'Wo'],
                           ['B', 'S', 'Wh', 'Wo'],
