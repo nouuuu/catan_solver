@@ -75,8 +75,8 @@ dm_long_row = [[(-1, 0), (0, -1)],
                [(-1, 1), (-1, 0)]]
 
 avg_weight = sum([w[1] for w in number_cards]) / len(number_cards)
-UPPER_BOUND = avg_weight + 0.25
-LOWER_BOUND = avg_weight - 1
+UPPER_BOUND = avg_weight + 0.5
+LOWER_BOUND = avg_weight - 0.5
 
 
 def check_constraint_weight(x, y, val, m, dm):
@@ -157,6 +157,15 @@ def calculate_tiles():
             local_tiles[row_index][column_index] = val  # fill in the value in the final matrix
             local_available_tiles.remove(val)  # delete the value from the local_number_cards matrix
     return local_tiles
+
+
+def calculate_harbours():
+    # vertical is 0,1 or 2 connecting tiles
+    # hooks horizontal is 0,1,2 or 3 connecting tiles
+    # Find first sea tile connecting to land tile
+    # list counter clockwise all sea tiles that are not next to another harbor and have 2 or more connecting land tiles
+
+    pass
 
 
 if __name__ == '__main__':
