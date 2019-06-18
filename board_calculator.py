@@ -93,6 +93,7 @@ def check_constraint_weight(x, y, val, m, dm):
         if not LOWER_BOUND <= avg <= UPPER_BOUND:
             raise ValueError
 
+
 def check_constraint_tiles(x, y, val, m, dm):
     for (dx1, dy1), (dx2, dy2) in dm:
         try:
@@ -126,7 +127,6 @@ def calculate_weights():
                 else:  # if try succeeds break the outer while loop and continue to setting value
                     break
             else:  # if the loop has run over its max tries the board is unsolvable and we retry with a clean board
-                print('fail')
                 return calculate_weights()
             local_board_values[row_index][column_index] = [num, val, letter]  # fill in the value in the final matrix
             local_number_cards.remove((num, val, letter))  # delete the value from the local_number_cards matrix
@@ -141,7 +141,7 @@ def calculate_tiles():
         for column_index, val in enumerate(x_list):  # loop columns from left to right, val is the value of the cell
             row_dm = row_index % 2 != 0 and dm_short_row or dm_long_row  # select correct dm for even/odd rows
             if val is None:
-                local_tiles[row_index][column_index]='desert'
+                local_tiles[row_index][column_index] = 'desert'
                 continue
             tries = 0
             while tries < 1000:
@@ -158,5 +158,6 @@ def calculate_tiles():
             local_available_tiles.remove(val)  # delete the value from the local_number_cards matrix
     return local_tiles
 
-if __name__ =='__main__':
+
+if __name__ == '__main__':
     pprint(calculate_tiles())
