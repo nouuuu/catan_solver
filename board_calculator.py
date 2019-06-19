@@ -1,6 +1,7 @@
 import random
 from copy import deepcopy
 from pprint import pprint
+import board_illustrator
 
 number_cards = [
     (2, 1, 'Zb'),
@@ -107,6 +108,19 @@ def check_constraint_tiles(x, y, val, m, dm):
         if val == dm1 or val == dm2:
             raise ValueError
 
+def check_ocean_tiles(x, y, val, m, dm):
+    for (dx1, dy1), (dx2, dy2) in dm:
+        try:
+            dm1 = m[x + dx1][y + dy1]  # _ means this value exists but ignore it
+            dm2 = m[x + dx2][y + dy2]
+        except (IndexError, TypeError):  # IndexError: don't check if a value doesn't exist,
+            # TypeError is to ignore the 0's in the matrix because there isn't a tuple there yet
+            continue
+        if not val:  # this is to ignore the check if there is a 0 in val, then it just fills in a number
+            continue
+        if val == dm1 or val == dm2:
+            raise ValueError
+
 
 def calculate_weights():
     local_board_values = deepcopy(board_layout)
@@ -159,9 +173,29 @@ def calculate_tiles():
     return local_tiles
 
 
+
+NEIGHBOURS_SHORT = [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (0, 1)] #this is for the short rows, the ones that start half a tile further
+NEIGHBOURS_LONG = [(-1, 0), (0, -1), (1, 0), (1, 1), (0, 1), (-1, 1)] #this is for the long rows, the ones that start furthest to the left
+
 def calculate_harbours(local_tiles):
+    for row_index, x_list in enumerate(local_tiles):
+        for column_index, val in enumerate(x_list):
+            if row_index % 2 != 0:
+                if val != 'ocean' and val != 'none': #this means this is a land tile
+                    for (dx, dy) in NEIGHBOURS_LONG:
+                        if local_tiles[dx,dy] == 'ocean': #this means its a land tile bordering to the ocean
+                            pass
+
+
+                    #check_ocean_tiles(row_index, column_index,val,local_tiles, NEIGHBOURS_LONG)
+                pass
+            else:
+                check_ocean_tiles(row_index, column_index, val, local_tiles, NEIGHBOURS_SHORT)
+
+                pass
+
     # vertical is 0,1 or 2 connecting tiles
-    # hooks horizontal is 0,1,2 or 3 connecting tiles
+    # hooks horizontal is 0,1 or 3 connecting tiles
     # Find first sea tile connecting to land tile
     # list counter clockwise all sea tiles that are not next to another harbor and have 2 or more connecting land tiles
     print("")
