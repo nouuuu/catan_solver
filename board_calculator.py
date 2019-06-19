@@ -159,7 +159,7 @@ def calculate_tiles():
     return local_tiles
 
 
-def calculate_harbours():
+def calculate_harbours(local_tiles):
     # vertical is 0,1 or 2 connecting tiles
     # hooks horizontal is 0,1,2 or 3 connecting tiles
     # Find first sea tile connecting to land tile
