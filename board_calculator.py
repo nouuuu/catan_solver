@@ -164,7 +164,8 @@ def calculate_harbours(local_tiles):
     # hooks horizontal is 0,1,2 or 3 connecting tiles
     # Find first sea tile connecting to land tile
     # list counter clockwise all sea tiles that are not next to another harbor and have 2 or more connecting land tiles
-
+    print("")
+    print("\n".join([" ".join(x) for x in local_tiles]))
     pass
 
 
