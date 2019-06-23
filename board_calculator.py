@@ -201,6 +201,9 @@ def calculate_harbours(local_tiles):
                 continue
             n_tiles = get_neighbours(row_index, column_index, n_coords, local_tiles)
             land_neighbours = [t for t in n_tiles if t[2] != 'ocean']
+            #is_next_to_harbour = any(t for t in n_tiles if t[2] == 'harbour')
+            if len(land_neighbours) > 1 and (t for t in n_tiles if t[2] != 'harbour'):
+                local_tiles[row_index][column_index] = "harbour"
             print(f"{column_index}, {row_index}, {land_neighbours}")
 
     # vertical is 0,1 or 2 connecting tiles
