@@ -1,7 +1,6 @@
 import random
 from copy import deepcopy
 from pprint import pprint
-import board_illustrator
 
 number_cards = [
     (2, 1, 'Zb'),
@@ -108,6 +107,7 @@ def check_constraint_tiles(x, y, val, m, dm):
         if val == dm1 or val == dm2:
             raise ValueError
 
+
 def check_ocean_tiles(x, y, val, m, dm):
     for (dx1, dy1), (dx2, dy2) in dm:
         try:
@@ -173,34 +173,40 @@ def calculate_tiles():
     return local_tiles
 
 
+NEIGHBOUR_COORDS = {1: [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (0, 1)],
+                    0: [(-1, 0), (0, -1), (1, 0), (1, 1), (0, 1), (-1, 1), ]}
+NEIGHBOURS_SHORT = [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0),
+                    (0, 1)]  # this is for the short rows, the ones that start half a tile further
+NEIGHBOURS_LONG = [(-1, 0), (0, -1), (1, 0), (1, 1), (0, 1),
+                   (-1, 1)]  # this is for the long rows, the ones that start furthest to the left
 
-NEIGHBOURS_SHORT = [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (0, 1)] #this is for the short rows, the ones that start half a tile further
-NEIGHBOURS_LONG = [(-1, 0), (0, -1), (1, 0), (1, 1), (0, 1), (-1, 1)] #this is for the long rows, the ones that start furthest to the left
+
+def get_neighbours(row_index, column_index, n_coords, local_tiles):
+    res = []
+    for r, c in n_coords:
+        try:
+            res.append((column_index + c, row_index + r, local_tiles[row_index + r][column_index + c]))
+        except IndexError:
+            pass
+    return res
+
 
 def calculate_harbours(local_tiles):
+    print("")
+    print("\n".join([" ".join(x) for x in local_tiles]))
     for row_index, x_list in enumerate(local_tiles):
         for column_index, val in enumerate(x_list):
-            if row_index % 2 != 0:
-                if val != 'ocean' and val != 'none': #this means this is a land tile
-                    for (dx, dy) in NEIGHBOURS_LONG:
-                        if local_tiles[dx,dy] == 'ocean': #this means its a land tile bordering to the ocean
-                            pass
-
-
-                    #check_ocean_tiles(row_index, column_index,val,local_tiles, NEIGHBOURS_LONG)
-                pass
-            else:
-                check_ocean_tiles(row_index, column_index, val, local_tiles, NEIGHBOURS_SHORT)
-
-                pass
+            n_coords = NEIGHBOUR_COORDS[row_index % 2]
+            if val != 'ocean':  # this means this is a land tile
+                continue
+            n_tiles = get_neighbours(row_index, column_index, n_coords, local_tiles)
+            land_neighbours = [t for t in n_tiles if t[2] != 'ocean']
+            print(f"{column_index}, {row_index}, {land_neighbours}")
 
     # vertical is 0,1 or 2 connecting tiles
     # hooks horizontal is 0,1 or 3 connecting tiles
     # Find first sea tile connecting to land tile
     # list counter clockwise all sea tiles that are not next to another harbor and have 2 or more connecting land tiles
-    print("")
-    print("\n".join([" ".join(x) for x in local_tiles]))
-    pass
 
 
 if __name__ == '__main__':
