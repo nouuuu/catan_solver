@@ -175,11 +175,13 @@ def calculate_tiles():
 
 NEIGHBOUR_COORDS = {1: [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (0, 1)],
                     0: [(-1, 0), (0, -1), (1, 0), (1, 1), (0, 1), (-1, 1), ]}
-NEIGHBOURS_SHORT = [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0),
-                    (0, 1)]  # this is for the short rows, the ones that start half a tile further
-NEIGHBOURS_LONG = [(-1, 0), (0, -1), (1, 0), (1, 1), (0, 1),
-                   (-1, 1)]  # this is for the long rows, the ones that start furthest to the left
 
+NEIGHBOUR_NODES = {1: [(-1, 0, 4, 5), (-1, -1, 5, 6), (0, -1, 0, 1), (-1, 1, 3, 4), (1, 0, 1, 2), (0, 1, 2, 3)],
+                   # long 1, -1 is wrong has to be -1 , 1, fix in NEIGHBOUR_COORDS
+                   0: [(-1, 0, 4, 5), (0, -1, 5, 6), (1, 0, 1, 2), (1, 1, 2, 3), (0, 1, 3, 4), (1, -1, 0, 1), ]}
+                   # short -1, 1 is wrong, has to be 1,-1
+# doubting what i am doing uphere, 2 wrong numbers on the same kind, seems weird, rechecked drawing, i seem to be correct
+#TODO please check
 
 def get_neighbours(row_index, column_index, n_coords, local_tiles):
     res = []
@@ -200,11 +202,11 @@ def calculate_harbours(local_tiles):
             if val != 'ocean':  # this means this is a land tile
                 continue
             n_tiles = get_neighbours(row_index, column_index, n_coords, local_tiles)
-            land_neighbours = [t for t in n_tiles if t[2] != 'ocean']
+            land_neighbours = [t for t in n_tiles if t[2] not in ('ocean', 'harbour')]
+            print(column_index, row_index, land_neighbours)
             is_next_to_harbour = any(t for t in n_tiles if t[2] == 'harbour')
             if len(land_neighbours) > 1 and not is_next_to_harbour:
                 local_tiles[row_index][column_index] = "harbour"
-
 
     # vertical is 0,1 or 2 connecting tiles
     # hooks horizontal is 0,1 or 3 connecting tiles
