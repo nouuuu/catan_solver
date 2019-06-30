@@ -17,3 +17,5 @@ def test_calculate_harbours():
     tiles = board_calculator.calculate_tiles()
     sea_filled_tiles = BoardDrawing._fill_sea(tiles, filler='ocean')
     board_calculator.calculate_harbours(sea_filled_tiles)
+    harbour_calc_board = board_calculator.calculate_harbours(sea_filled_tiles)
+    board_calculator.calc_harbour_direction(harbour_calc_board)
