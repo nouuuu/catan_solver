@@ -172,9 +172,13 @@ def calculate_tiles():
             local_available_tiles.remove(val)  # delete the value from the local_number_cards matrix
     return local_tiles
 
+#even-r layout https://www.redblobgames.com/grids/hexagons/#neighbors-offset
+#odd rows are long rows are :1
+#even rows are short rows are :0
 
-NEIGHBOUR_COORDS = {1: [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (0, 1)],
-                    0: [(-1, 0), (0, -1), (1, 0), (1, 1), (0, 1), (-1, 1), ]}
+
+NEIGHBOUR_COORDS = {1: [(-1, 0), (-1, -1), (0, -1), (-1, 1), (1, 0), (0, 1)],
+                    0: [(-1, 0), (0, -1), (1, 0), (1, 1), (0, 1), (1, -1), ]}
 
 NEIGHBOUR_NODES = {1: [(-1, 0, 4, 5), (-1, -1, 5, 6), (0, -1, 0, 1), (-1, 1, 3, 4), (1, 0, 1, 2), (0, 1, 2, 3)],
                    # long 1, -1 is wrong has to be -1 , 1, fix in NEIGHBOUR_COORDS
