@@ -189,9 +189,9 @@ NEIGHBOUR_NODES = {1: [(-1, 0, 4, 5), (-1, -1, 5, 6), (0, -1, 0, 1), (-1, 1, 3, 
 
 def get_neighbours(row_index, column_index, n_coords, local_tiles):
     res = []
-    for r, c in n_coords:
+    for c, r, node_a, node_b in n_coords:
         try:
-            res.append((column_index + c, row_index + r, local_tiles[row_index + r][column_index + c]))
+            res.append((column_index + c, row_index + r, local_tiles[row_index + r][column_index + c], node_a, node_b))
         except IndexError:
             pass
     return res
@@ -202,7 +202,7 @@ def calculate_harbours(local_tiles):
     print(catan_board_to_string(local_tiles))
     for row_index, x_list in enumerate(local_tiles):
         for column_index, val in enumerate(x_list):
-            n_coords = NEIGHBOUR_COORDS[row_index % 2]
+            n_coords = NEIGHBOUR_NODES[row_index % 2]
             if val != 'ocean':  # this means this is a land tile
                 continue
             n_tiles = get_neighbours(row_index, column_index, n_coords, local_tiles)
@@ -211,6 +211,9 @@ def calculate_harbours(local_tiles):
             is_next_to_harbour = any(t for t in n_tiles if t[2] == 'harbour')
             if len(land_neighbours) > 1 and not is_next_to_harbour:
                 local_tiles[row_index][column_index] = "harbour"
+                print(land_neighbours)
+                #land_neighbours is not what we need, the contact points are made from the view of the harbour tile
+                #not from the view of the neighouring land tiles
 
     # vertical is 0,1 or 2 connecting tiles
     # hooks horizontal is 0,1 or 3 connecting tiles
@@ -219,28 +222,6 @@ def calculate_harbours(local_tiles):
     print("")
     print(catan_board_to_string(local_tiles))
     return local_tiles
-
-
-def calc_harbour_direction(local_tiles_harbour):
-    #grab harbour tile
-    #run NEIGHBOUR_COORDS matrix to check where there is a land tile
-    #use relative coords of land tile to check NEIGHBOUR_NODES and add the corresponding corners to this tile, this
-    #is the relative direction of the harbour
-    #CHECK https://imgur.com/xUzizDI for relative corner directions and calculations
-    for row_index, x_list in enumerate(local_tiles_harbour):
-        for column_index, val in enumerate(x_list):
-            n_coords = NEIGHBOUR_COORDS[row_index % 2]
-            if val == 'harbour':
-                n_tiles = get_neighbours(row_index, column_index, n_coords, local_tiles_harbour)
-                for a,b,c,d in NEIGHBOUR_NODES[row_index % 2]:
-                    if any(1 for r,c, v in n_tiles if r==a and c == b ):
-                        print(a,b,c,d)
-
-
-
-
-
-
 
 
 def catan_board_to_string(local_tiles):
