@@ -214,7 +214,7 @@ def calculate_harbours(local_tiles):
     # list counter clockwise all sea tiles that are not next to another harbor and have 2 or more connecting land tiles
     print("")
     print(catan_board_to_string(local_tiles))
-    return(local_tiles)
+    return local_tiles
 
 
 def calc_harbour_direction(local_tiles_harbour):
@@ -228,8 +228,8 @@ def calc_harbour_direction(local_tiles_harbour):
             n_coords = NEIGHBOUR_COORDS[row_index % 2]
             if val == 'harbour':
                 n_tiles = get_neighbours(row_index, column_index, n_coords, local_tiles_harbour)
-                for a,b,c,d in NEIGHBOUR_NODES:
-                    if n_tiles[3] == NEIGHBOUR_NODES[a][b]:
+                for a,b,c,d in NEIGHBOUR_NODES[row_index % 2]:
+                    if any(1 for r,c, v in n_tiles if r==a and c == b ):
                         print(a,b,c,d)
 
 
