@@ -173,8 +173,8 @@ def calculate_tiles():
     return local_tiles
 
 #even-r layout https://www.redblobgames.com/grids/hexagons/#neighbors-offset
-#odd rows are long rows are :1
-#even rows are short rows are :0
+#odd rows are long rows are 1:
+#even rows are short rows are 0:
 
 
 NEIGHBOUR_COORDS = {1: [(-1, 0), (-1, -1), (0, -1), (-1, 1), (1, 0), (0, 1)],
@@ -211,9 +211,14 @@ def calculate_harbours(local_tiles):
             is_next_to_harbour = any(t for t in n_tiles if t[2] == 'harbour')
             if len(land_neighbours) > 1 and not is_next_to_harbour:
                 local_tiles[row_index][column_index] = "harbour"
+                print(local_tiles[row_index][column_index], row_index, column_index)
                 print(land_neighbours)
+
+
+
                 #land_neighbours is not what we need, the contact points are made from the view of the harbour tile
                 #not from the view of the neighouring land tiles
+    #CHECK https://imgur.com/xUzizDI for relative corner directions and calculations
 
     # vertical is 0,1 or 2 connecting tiles
     # hooks horizontal is 0,1 or 3 connecting tiles
