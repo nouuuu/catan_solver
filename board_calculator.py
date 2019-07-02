@@ -198,8 +198,8 @@ def get_neighbours(row_index, column_index, n_coords, local_tiles):
 
 
 def calculate_harbours(local_tiles):
-    print("")
-    print(catan_board_to_string(local_tiles))
+    #print("")
+    #print(catan_board_to_string(local_tiles))
     for row_index, x_list in enumerate(local_tiles):
         for column_index, val in enumerate(x_list):
             n_coords = NEIGHBOUR_NODES[row_index % 2]
@@ -207,7 +207,7 @@ def calculate_harbours(local_tiles):
                 continue
             n_tiles = get_neighbours(row_index, column_index, n_coords, local_tiles)
             land_neighbours = [t for t in n_tiles if t[2] not in ('ocean', 'harbour')]
-            print(column_index, row_index, land_neighbours)
+            #print(column_index, row_index, land_neighbours)
             is_next_to_harbour = any(t for t in n_tiles if t[2] == 'harbour')
             if len(land_neighbours) > 1 and not is_next_to_harbour:
                 local_tiles[row_index][column_index] = "harbour"
@@ -224,8 +224,8 @@ def calculate_harbours(local_tiles):
     # hooks horizontal is 0,1 or 3 connecting tiles
     # Find first sea tile connecting to land tile
     # list counter clockwise all sea tiles that are not next to another harbor and have 2 or more connecting land tiles
-    print("")
-    print(catan_board_to_string(local_tiles))
+    #print("")
+    #print(catan_board_to_string(local_tiles))
     return local_tiles
 
 
