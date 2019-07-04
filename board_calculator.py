@@ -193,9 +193,12 @@ def calculate_tiles():
 NEIGHBOUR_COORDS = {1: [(-1, 0), (-1, -1), (0, -1), (-1, 1), (1, 0), (0, 1)],
                     0: [(-1, 0), (0, -1), (1, 0), (1, 1), (0, 1), (1, -1), ]}
 
-NEIGHBOUR_NODES = {1: [(-1, 0, 4, 5), (-1, -1, 5, 6), (0, -1, 0, 1), (-1, 1, 3, 4), (1, 0, 1, 2), (0, 1, 2, 3)],
+# CHECK https://imgur.com/xUzizDI for relative corner directions and calculations
+
+NEIGHBOUR_NODES = {1: [(-1, 0, 4, 5), (-1, -1, 5, 0), (0, -1, 0, 1), (-1, 1, 3, 4), (1, 0, 1, 2), (0, 1, 2, 3)],
                    # long 1, -1 is wrong has to be -1 , 1, fix in NEIGHBOUR_COORDS
-                   0: [(-1, 0, 4, 5), (0, -1, 5, 6), (1, 0, 1, 2), (1, 1, 2, 3), (0, 1, 3, 4), (1, -1, 0, 1), ]}
+                   0: [(-1, 0, 5, 4), (0, -1, 4, 3), (1, 0, 2, 1), (1, 1, 1, 0), (0, 1, 0, 5), (1, -1, 3, 2), ]}
+                   #0: [(-1, 0, 4, 5), (0, -1, 5, 0), (1, 0, 1, 2), (1, 1, 2, 3), (0, 1, 3, 4), (1, -1, 0, 1), ]}
 
 
 def get_neighbours(row_index, column_index, n_coords, local_tiles):
