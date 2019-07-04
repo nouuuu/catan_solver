@@ -1,3 +1,5 @@
+from itertools import chain
+
 import drawSvg as draw
 import numpy as np
 from numpy.random import randint
@@ -26,15 +28,15 @@ class BoardDrawing(object):
     def __init__(self, number_matrix, tile_layout):
         self.file_name = "catan_board.svg"
         self.numbers = np.array(self._fill_sea(number_matrix))
-        self.tiles = np.array(self._fill_sea(tile_layout, filler="ocean"))
+        self.tiles = np.array(self._fill_sea(tile_layout, filler="ocean"), dtype='U8')
         if self.numbers.shape != self.tiles.shape:
             raise ValueError("Tile layout an number layout do not match")
         self.shape = self.numbers.shape
         self.drawing = draw.Drawing((self.shape[1] - 2.5) * self.TILE_SIZE,
                                     (self.shape[0] - 1.5) * self.TILE_SIZE * self.HEX_COEFF,
                                     overflow="hidden")
-        self.drawing.viewBox = (-self.QUARTER_TILE, self.HALF_TILE, self.drawing.width,
-                                self.drawing.height - self.TILE_SIZE)
+        self.drawing.viewBox = (-self.TILE_SIZE, -self.HALF_TILE, self.drawing.width + self.TILE_SIZE,
+                                self.drawing.height + self.TILE_SIZE)
         self._init_tile_images()
 
     def generate_board_outline(self):
@@ -42,8 +44,6 @@ class BoardDrawing(object):
             for x, val in enumerate(row):
                 if not val:
                     continue
-                if val == "ocean":
-                    self.add_harbour(x, y)
                 self.drawing.append(self._draw_hexagon(*self._get_hexagon_coords(x, y), val))
 
     def write_numbers(self):
@@ -76,13 +76,9 @@ class BoardDrawing(object):
         return [circle, text]
 
     def _get_hexagon_coords(self, x, y):
-        # r-odd grid layout
+        # r-odd grid layout x = col, y = row
         x_offset = (y % 2) * self.HALF_TILE
-        return (x * self.TILE_SIZE - x_offset) * self.HEX_COEFF, y * self.TILE_SIZE * 0.75
-
-    def _get_neighbours(self, x, y, matrix):
-        pass
-        # r-odd grid layout
+        return int((x * self.TILE_SIZE - x_offset) * self.HEX_COEFF), int(y * self.TILE_SIZE * 0.75)
 
     def _init_tile_images(self):
         for tile_id, path in self.TILES.items():
@@ -102,10 +98,20 @@ class BoardDrawing(object):
 
         return [[filler] * (row_len + 2)] + tile_layout + [[filler] * (row_len + 2)]
 
-    def add_harbour(self, x, y):
-        pass
-        # From top left path right to left, top to bottom until you find the first tile with 2 not sea neighbours
-        # add a harbour according to the harbour generator, extend a line to every land node
+    def draw_harbours(self, harbour_list):
+        for col, row, adj_tiles in harbour_list:
+            c_x, c_y = self._get_hexagon_coords(col, row)
+            t = draw.Text("?", 42, c_x, -c_y, center=True)
+            c = draw.Circle(c_x, -c_y, r=32, fill="white", stroke="black")
+            n = set(chain.from_iterable([(a, b) for _, _, type, a, b in adj_tiles if not type == 'harbour']))
+            # 0 = 90° theta, 1= 30*,  2 = -30°, 3 = - 90°
+            for corner in n:
+                theta = 90 - corner * 60
+                e_x = int(self.HALF_TILE * np.math.cos(np.math.radians(theta)) + c_x)
+                e_y = int(self.HALF_TILE * np.math.sin(np.math.radians(theta)) + c_y)
+                line = draw.Line(c_x, -c_y, e_x, -e_y, **{"stroke": "red", "stroke-width": "5px"})
+                self.drawing.extend([line])
+            self.drawing.extend([c, t])
 
     def _draw_coordinates(self, bx, by, x, y):
         cx = bx - self.QUARTER_TILE
@@ -127,3 +133,33 @@ class Pattern(draw.DrawingParentElement):
 
     def __init__(self, children=(), **args):
         super().__init__(children=children, **args)
+
+
+class CatanTile(object):
+
+    def __init__(self, row, col, tile_type):
+        self.row = row
+        self.col = col
+        self.tile_type = tile_type
+
+
+class CatanLandTile(CatanTile):
+    land_types = ["wood"]
+
+    def __init__(self, row, col, tile_type, letter_value, number_value):
+        if tile_type not in self.land_types:
+            raise ValueError(f"{tile_type} is not a land tile")
+        super().__init__(row, col, tile_type)
+
+
+class CatanSeaTile(CatanTile):
+    land_types = ["sea", "harbour"]
+
+    def __init__(self, row, col, tile_type, is_harbour, harbour_connections):
+        if tile_type not in self.land_types:
+            raise ValueError(f"{tile_type} is not a sea tile")
+        super().__init__(row, col, tile_type)
+
+
+a_wood_tile = CatanLandTile(1, 2, "wood", "A", 4)
+a_harbour_tile = CatanSeaTile(1, 2, "harbour", True, [0, 4, 6])

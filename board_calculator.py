@@ -1,7 +1,8 @@
 import random
 from copy import deepcopy
 from pprint import pprint
-from tile_object import CatanLandTile, CatanSeaTile, CatanTile
+
+from tile_object import CatanLandTile
 
 number_cards = [
     (2, 1, 'Zb'),
@@ -47,8 +48,6 @@ number_cards = [
     (12, 1, 'R'),
     (12, 1, 'Y')]
 
-
-
 available_tiles = ['wood'] * 7 \
                   + ['ore'] * 7 \
                   + ['brick'] * 7 \
@@ -63,11 +62,15 @@ board_layout = [[0, 0, 0, 0, 0, 0, 0, 0],  # x 0
                 [None, 0, 0, 0, 0, None, 0, 0],  # x 3
                 [0, 0, 0, 0, 0, 0, 0, 0]]
 
-board_layout_object = [[CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile],  # x 0
-                [None, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, None, CatanLandTile, CatanLandTile],  # x 1
-                [CatanLandTile, CatanLandTile, None, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile],  # x 2
-                [None, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, None, CatanLandTile, CatanLandTile],  # x 3
-                [CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile]]  # x 4
+board_layout_object = [
+    [CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile,
+     CatanLandTile],  # x 0
+    [None, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, None, CatanLandTile, CatanLandTile],  # x 1
+    [CatanLandTile, CatanLandTile, None, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile],
+    # x 2
+    [None, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, None, CatanLandTile, CatanLandTile],  # x 3
+    [CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile,
+     CatanLandTile]]  # x 4
 
 dm_short_row = [[(-1, 0), (-1, -1)],
                 [(-1, -1), (0, -1)],
@@ -181,9 +184,10 @@ def calculate_tiles():
             local_available_tiles.remove(val)  # delete the value from the local_number_cards matrix
     return local_tiles
 
-#even-r layout https://www.redblobgames.com/grids/hexagons/#neighbors-offset
-#odd rows are long rows are 1:
-#even rows are short rows are 0:
+
+# even-r layout https://www.redblobgames.com/grids/hexagons/#neighbors-offset
+# odd rows are long rows are 1:
+# even rows are short rows are 0:
 
 
 NEIGHBOUR_COORDS = {1: [(-1, 0), (-1, -1), (0, -1), (-1, 1), (1, 0), (0, 1)],
@@ -192,9 +196,7 @@ NEIGHBOUR_COORDS = {1: [(-1, 0), (-1, -1), (0, -1), (-1, 1), (1, 0), (0, 1)],
 NEIGHBOUR_NODES = {1: [(-1, 0, 4, 5), (-1, -1, 5, 6), (0, -1, 0, 1), (-1, 1, 3, 4), (1, 0, 1, 2), (0, 1, 2, 3)],
                    # long 1, -1 is wrong has to be -1 , 1, fix in NEIGHBOUR_COORDS
                    0: [(-1, 0, 4, 5), (0, -1, 5, 6), (1, 0, 1, 2), (1, 1, 2, 3), (0, 1, 3, 4), (1, -1, 0, 1), ]}
-                   # short -1, 1 is wrong, has to be 1,-1
-# doubting what i am doing uphere, 2 wrong numbers on the same kind, seems weird, rechecked drawing, i seem to be correct
-#TODO please check
+
 
 def get_neighbours(row_index, column_index, n_coords, local_tiles):
     res = []
@@ -207,8 +209,7 @@ def get_neighbours(row_index, column_index, n_coords, local_tiles):
 
 
 def calculate_harbours(local_tiles):
-    #print("")
-    #print(catan_board_to_string(local_tiles))
+    harbour_list = []
     for row_index, x_list in enumerate(local_tiles):
         for column_index, val in enumerate(x_list):
             n_coords = NEIGHBOUR_NODES[row_index % 2]
@@ -216,43 +217,12 @@ def calculate_harbours(local_tiles):
                 continue
             n_tiles = get_neighbours(row_index, column_index, n_coords, local_tiles)
             land_neighbours = [t for t in n_tiles if t[2] not in ('ocean', 'harbour')]
-            #print(column_index, row_index, land_neighbours)
+            # print(column_index, row_index, land_neighbours)
             is_next_to_harbour = any(t for t in n_tiles if t[2] == 'harbour')
             if len(land_neighbours) > 1 and not is_next_to_harbour:
                 local_tiles[row_index][column_index] = "harbour"
-                print(local_tiles[row_index][column_index], row_index, column_index)
-                #print(land_neighbours)
-                if len(land_neighbours)<=2:
-                    a,b=land_neighbours
-                    print(a[-2:])
-                    print(b[-2:])
-                elif len(land_neighbours)==3:
-                    a,b,c=land_neighbours
-                    print(a[-2:])
-                    print(b[-2:])
-                    print(c[-2:])
-                elif len(land_neighbours)==4:
-                    a,b,c,d=land_neighbours
-                    print(a[-2:])
-                    print(b[-2:])
-                    print(c[-2:])
-                    print(d[-2:])
-                else:
-                    print('no harbour directions')
-
-
-
-                #land_neighbours is not what we need, the contact points are made from the view of the harbour tile
-                #not from the view of the neighouring land tiles
-    #CHECK https://imgur.com/xUzizDI for relative corner directions and calculations
-
-    # vertical is 0,1 or 2 connecting tiles
-    # hooks horizontal is 0,1 or 3 connecting tiles
-    # Find first sea tile connecting to land tile
-    # list counter clockwise all sea tiles that are not next to another harbor and have 2 or more connecting land tiles
-    #print("")
-    #print(catan_board_to_string(local_tiles))
-
+                harbour_list.append((column_index, row_index, land_neighbours))
+    return harbour_list
 
 
 def catan_board_to_string(local_tiles):
