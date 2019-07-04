@@ -225,20 +225,16 @@ def calculate_harbours(local_tiles):
             # print(column_index, row_index, land_neighbours)
             is_next_to_harbour = any(t for t in n_tiles if t[2] == 'harbour')
             if len(land_neighbours) > 1 and not is_next_to_harbour:
-                resource_list = ['ore', 'wood', 'sheep', 'wheat', 'brick' ]
-                harbournr =+1
+                resource_list = ['', 'ore', 'wood', 'sheep', 'wheat', 'brick' ]
+                harbournr +=1
                 harbour_kind = '2_to_1_'
-                if harbournr - 1 % 2 == 0:
+                if harbournr % 2 == 0:
                     harbour_kind = '3_to_1'
                 else:
-                    resource_list_number = +1
+                    resource_list_number += 1
                     if resource_list_number >=6 :
                         resource_list_number =0
-                    harbour_kind = harbour_kind + resource_list[resource_list_number - 1]
-
-
-
-
+                    harbour_kind = harbour_kind + resource_list[resource_list_number]
                 local_tiles[row_index][column_index] = "harbour"
                 harbour_list.append((column_index, row_index, land_neighbours,harbour_kind))
     return harbour_list

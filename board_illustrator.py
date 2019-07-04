@@ -99,7 +99,7 @@ class BoardDrawing(object):
         return [[filler] * (row_len + 2)] + tile_layout + [[filler] * (row_len + 2)]
 
     def draw_harbours(self, harbour_list):
-        for col, row, adj_tiles in harbour_list:
+        for col, row, adj_tiles, _ in harbour_list:
             c_x, c_y = self._get_hexagon_coords(col, row)
             t = draw.Text("?", 42, c_x, -c_y, center=True)
             c = draw.Circle(c_x, -c_y, r=32, fill="white", stroke="black")
