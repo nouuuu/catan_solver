@@ -1,6 +1,6 @@
 class CatanTile(object):
 
-    def _init_(self, row, col, tile_type):
+    def _init_(self, row, col, tile_type, **kwargs):
         self.row = row
         self.col = col
         self.tile_type = tile_type
@@ -23,6 +23,5 @@ class CatanSeaTile(CatanTile):
             raise ValueError(f"{tile_type} is not a sea tile")
         super()._init_(row, col, tile_type)
 
-
-#a_wood_tile = CatanLandTile(1, 2, "wood", "A", 4)
-#a_harbour_tile = CatanSeaTile(1, 2, "harbour", True, [0, 4, 6])
+# a_wood_tile = CatanLandTile(1, 2, "wood", "A", 4)
+# a_harbour_tile = CatanSeaTile(1, 2, "harbour", True, [0, 4, 6])

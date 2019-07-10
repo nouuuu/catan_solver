@@ -1,76 +1,37 @@
 import random
 from copy import deepcopy
+from operator import itemgetter
 from pprint import pprint
 
-from tile_object import CatanLandTile
+import math
 
-number_cards = [
-    (2, 1, 'Zb'),
-    (2, 1, 'A'),
-    (3, 2, 'Za'),
-    (3, 2, 'L'),
-    (3, 2, 'E'),
-    (4, 3, 'N'),
-    (4, 3, 'U'),
-    (4, 3, 'C'),
-    (4, 3, 'C'),
-    (5, 4, 'T'),
-    (5, 4, 'B'),
-    (5, 4, 'W'),
-    (5, 4, 'W'),
-    # (5, 4, ''),
-    # (6, 5, ''),
-    # (6, 5, ''),
-    (6, 5, 'D'),
-    (6, 5, 'K'),
-    (6, 5, 'C'),
-    (6, 5, 'Zc'),
-    (8, 5, 'M'),
-    (8, 5, 'O'),
-    (8, 5, 'O'),
-    (8, 5, 'G'),
-    # (8, 5, ''),
-    # (8, 5, ''),
-    (9, 4, 'X'),
-    (9, 4, 'F'),
-    (9, 4, 'V'),
-    # (9, 4, ''),
-    # (9, 4, ''),
-    (10, 3, 'J'),
-    (10, 3, 'P'),
-    (10, 3, 'J'),
-    (10, 3, 'S'),
-    (11, 2, 'H'),
-    (11, 2, 'I'),
-    (11, 2, 'H'),
-    (11, 2, 'R'),
-    (11, 2, 'Q'),
-    (12, 1, 'R'),
-    (12, 1, 'Y')]
+board_layout = [[0, 0, 0, 0, 0, 0, 0, 0, 0],  # x 0
+                [None, 0, 0, 0, 0, 0, 0, 0, 0],  # x 1
+                [0, 0, 0, 0, None, 0, 0, 0, 0],  # x 2
+                [None, 0, 0, 0, 0, 0, 0, 0, 0],  # x 3
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [None, 0, 0, 0, 0, 0, 0, 0, 0],  # x 3
+                [None, 0, 0, 0, 0, None, 0, 0, 0],  # x 3
+                ]
 
-available_tiles = ['wood'] * 7 \
-                  + ['ore'] * 7 \
-                  + ['brick'] * 7 \
-                  + ['wheat'] * 7 \
-                  + ['sheep'] * 7 \
-                  + ['desert'] * 0 \
-                  + ['ocean'] * 0
+total_tiles = sum(sum([1 for x in y if x is not None]) for y in board_layout)
 
-board_layout = [[0, 0, 0, 0, 0, 0, 0, 0],  # x 0
-                [None, 0, 0, 0, 0, None, 0, 0],  # x 1
-                [0, 0, None, 0, 0, 0, 0, 0],  # x 2
-                [None, 0, 0, 0, 0, None, 0, 0],  # x 3
-                [0, 0, 0, 0, 0, 0, 0, 0]]
+number_cards = [(2, 1, "")] * math.ceil(total_tiles / 12) \
+               + [(3, 2, "")] * math.ceil(total_tiles / 10) \
+               + [(4, 3, "")] * math.ceil(total_tiles / 9) \
+               + [(5, 4, "")] * math.ceil(total_tiles / 8) \
+               + [(6, 5, "")] * math.ceil(total_tiles / 7) \
+               + [(8, 5, "")] * math.ceil(total_tiles / 7) \
+               + [(9, 4, "")] * math.ceil(total_tiles / 8) \
+               + [(10, 3, "")] * math.ceil(total_tiles / 9) \
+               + [(11, 2, "")] * math.ceil(total_tiles / 10) \
+               + [(12, 1, "")] * math.ceil(total_tiles / 12)
 
-board_layout_object = [
-    [CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile,
-     CatanLandTile],  # x 0
-    [None, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, None, CatanLandTile, CatanLandTile],  # x 1
-    [CatanLandTile, CatanLandTile, None, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile],
-    # x 2
-    [None, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, None, CatanLandTile, CatanLandTile],  # x 3
-    [CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile, CatanLandTile,
-     CatanLandTile]]  # x 4
+available_tiles = ['wood'] * math.ceil(total_tiles / 5) \
+                  + ['ore'] * math.ceil(total_tiles / 5) \
+                  + ['brick'] * math.ceil(total_tiles / 5) \
+                  + ['wheat'] * math.ceil(total_tiles / 5) \
+                  + ['sheep'] * math.ceil(total_tiles / 5)
 
 dm_short_row = [[(-1, 0), (-1, -1)],
                 [(-1, -1), (0, -1)],
@@ -87,8 +48,10 @@ dm_long_row = [[(-1, 0), (0, -1)],
                [(-1, 1), (-1, 0)]]
 
 avg_weight = sum([w[1] for w in number_cards]) / len(number_cards)
-UPPER_BOUND = avg_weight + 0.5
-LOWER_BOUND = avg_weight - 0.5
+print("AVG WEIGHT-----------------")
+print(avg_weight)
+UPPER_BOUND = avg_weight + 0.25
+LOWER_BOUND = avg_weight - 0.75
 
 
 def check_constraint_weight(x, y, val, m, dm):
@@ -141,7 +104,7 @@ def calculate_weights():
     for row_index, x_list in enumerate(local_board_values):
         for column_index, val in enumerate(x_list):  # loop columns from left to right, val is the value of the cell
             row_dm = row_index % 2 != 0 and dm_short_row or dm_long_row  # select correct dm for even/odd rows
-            if val is None:
+            if val is None or isinstance(val, str):
                 continue
             tries = 0
             while tries < 1000:
@@ -195,10 +158,12 @@ NEIGHBOUR_COORDS = {1: [(-1, 0), (-1, -1), (0, -1), (-1, 1), (1, 0), (0, 1)],
 
 # CHECK https://imgur.com/xUzizDI for relative corner directions and calculations
 
-NEIGHBOUR_NODES = {1: [(-1, 0, 4, 5), (-1, -1, 5, 0), (0, -1, 0, 1), (-1, 1, 3, 4), (1, 0, 1, 2), (0, 1, 2, 3)],
+NEIGHBOUR_NODES = {1: [(-1, 0, 5, 4), (-1, -1, 4, 3), (0, -1, 3, 2), (-1, 1, 0, 5), (1, 0, 2, 1), (0, 1, 1, 0)],
                    # long 1, -1 is wrong has to be -1 , 1, fix in NEIGHBOUR_COORDS
                    0: [(-1, 0, 5, 4), (0, -1, 4, 3), (1, 0, 2, 1), (1, 1, 1, 0), (0, 1, 0, 5), (1, -1, 3, 2), ]}
-                   #0: [(-1, 0, 4, 5), (0, -1, 5, 0), (1, 0, 1, 2), (1, 1, 2, 3), (0, 1, 3, 4), (1, -1, 0, 1), ]}
+
+
+# 0: [(-1, 0, 4, 5), (0, -1, 5, 0), (1, 0, 1, 2), (1, 1, 2, 3), (0, 1, 3, 4), (1, -1, 0, 1), ]}
 
 
 def get_neighbours(row_index, column_index, n_coords, local_tiles):
@@ -211,10 +176,26 @@ def get_neighbours(row_index, column_index, n_coords, local_tiles):
     return res
 
 
+def oddr_to_cube(col, row):
+    x = col - (row - (row & 1)) / 2
+    z = row
+    y = -x - z
+    return x, y, z
+
+
+def cube_distance(a, b):
+    return (abs(a[0] - b[0]) + abs(a[1] - b[1]) + abs(a[2] - b[2])) / 2
+
+
+def calc_distance(a, b):
+    a_cube = oddr_to_cube(a[0], a[1])
+    b_cube = oddr_to_cube(b[0], b[1])
+    return cube_distance(a_cube, b_cube)
+
+
 def calculate_harbours(local_tiles):
     harbour_list = []
-    harbournr = 0
-    resource_list_number = 0
+
     for row_index, x_list in enumerate(local_tiles):
         for column_index, val in enumerate(x_list):
             n_coords = NEIGHBOUR_NODES[row_index % 2]
@@ -225,18 +206,29 @@ def calculate_harbours(local_tiles):
             # print(column_index, row_index, land_neighbours)
             is_next_to_harbour = any(t for t in n_tiles if t[2] == 'harbour')
             if len(land_neighbours) > 1 and not is_next_to_harbour:
-                resource_list = ['', 'ore', 'wood', 'sheep', 'wheat', 'brick']
-                harbournr += 1
-                harbour_kind = '2_to_1_'
-                if harbournr % 2 == 0:
-                    harbour_kind = '3_to_1'
-                else:
-                    resource_list_number += 1
-                    if resource_list_number >= 6:
-                        resource_list_number = 0
-                    harbour_kind = harbour_kind + resource_list[resource_list_number]
                 local_tiles[row_index][column_index] = "harbour"
-                harbour_list.append((column_index, row_index, land_neighbours, harbour_kind))
+                harbour_list.append([column_index, row_index, land_neighbours, ""])
+
+    tbd_harbour = harbour_list[0]
+    resource_list = ['ore', 'wood', 'sheep', 'wheat', 'brick']
+    harbournr = 0
+    while tbd_harbour:
+        # fill harbour type
+        harbour_kind = '2_to_1_'
+        if harbournr % 2 == 0:
+            harbour_kind = '3_to_1'
+        else:
+            resource_list_number = int(((harbournr - 1) / 2)) % 5
+            harbour_kind = harbour_kind + resource_list[resource_list_number]
+        tbd_harbour[3] = harbour_kind
+        harbournr += 1
+        # find next closest neighbour
+        tbd_harbour_distances = [(i, calc_distance(tbd_harbour, h)) for i, h in enumerate(harbour_list) if not h[3]]
+        try:
+            tbd_harbour = harbour_list[sorted(tbd_harbour_distances, key=itemgetter(1))[0][0]]
+        except IndexError:
+            break
+
     return harbour_list
 
 

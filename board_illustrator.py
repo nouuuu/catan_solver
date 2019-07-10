@@ -35,8 +35,8 @@ class BoardDrawing(object):
         self.drawing = draw.Drawing((self.shape[1] - 2.5) * self.TILE_SIZE,
                                     (self.shape[0] - 1.5) * self.TILE_SIZE * self.HEX_COEFF,
                                     overflow="hidden")
-        self.drawing.viewBox = (-self.TILE_SIZE, -self.HALF_TILE, self.drawing.width + self.TILE_SIZE,
-                                self.drawing.height + self.TILE_SIZE)
+        self.drawing.viewBox = (-self.QUARTER_TILE, -self.QUARTER_TILE, self.drawing.width,
+                                self.drawing.height)
         self._init_tile_images()
 
     def generate_board_outline(self):
@@ -49,11 +49,11 @@ class BoardDrawing(object):
     def write_numbers(self):
         for y, row in enumerate(self.numbers):
             for x, val in enumerate(row):
-                self.drawing.extend(self._draw_coordinates(*self._get_hexagon_coords(x, y), x, y))
+                #self.drawing.extend(self._draw_coordinates(*self._get_hexagon_coords(x, y), x, y))
                 if not val:
                     continue
                 number, weight, letter = val
-                self.drawing.extend(self._draw_number(*self._get_hexagon_coords(x, y), letter))
+                self.drawing.extend(self._draw_number(*self._get_hexagon_coords(x, y), number))
 
     def save_output(self):
         with open(self.file_name, mode="w") as fp:
