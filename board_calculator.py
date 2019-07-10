@@ -7,9 +7,9 @@ import math
 
 board_layout = [[0, 0, 0, 0, 0, 0, 0, 0, 0],  # x 0
                 [None, 0, 0, 0, 0, 0, 0, 0, 0],  # x 1
-                [0, 0, 0, 0, None, 0, 0, 0, 0],  # x 2
-                [None, 0, 0, 0, 0, 0, 0, 0, 0],  # x 3
-                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, "oce", "oce", 0, 0, 0, 0],  # x 2
+                [None, 0, 0, "oce", "oce", 0, 0, 0, 0],  # x 3
+                [0, 0, 0, 0, 0, "oce", "oce", 0, 0],
                 [None, 0, 0, 0, 0, 0, 0, 0, 0],  # x 3
                 [None, 0, 0, 0, 0, None, 0, 0, 0],  # x 3
                 ]
@@ -50,8 +50,8 @@ dm_long_row = [[(-1, 0), (0, -1)],
 avg_weight = sum([w[1] for w in number_cards]) / len(number_cards)
 print("AVG WEIGHT-----------------")
 print(avg_weight)
-UPPER_BOUND = avg_weight + 0.25
-LOWER_BOUND = avg_weight - 0.75
+UPPER_BOUND = avg_weight + 10.25
+LOWER_BOUND = avg_weight - 10.75
 
 
 def check_constraint_weight(x, y, val, m, dm):
@@ -62,7 +62,8 @@ def check_constraint_weight(x, y, val, m, dm):
         except (IndexError, TypeError):  # IndexError: don't check if a value doesn't exist,
             # TypeError is to ignore the 0's in the matrix because there isn't a tuple there yet
             continue
-        if not (val):  # this is to ignore the check if there is a 0 in val, then it just fills in a number
+        if not (val) or isinstance(val, str) or isinstance(dm1, str) or isinstance(dm2, str):
+            # this is to ignore the check if there is a 0 in val, then it just fills in a number
             continue
         avg = (val + dm1 + dm2) / 3
         if not LOWER_BOUND <= avg <= UPPER_BOUND:
@@ -111,7 +112,8 @@ def calculate_weights():
                 num, val, letter = random.choice(local_number_cards)
                 try:
                     check_constraint_weight(row_index, column_index, val, local_board_values, row_dm)
-                except ValueError:  # thrown if the check_constraints fails, then a new random value is tried
+                except ValueError as e:  # thrown if the check_constraints fails, then a new random value is tried
+                    print(e)
                     tries += 1
                 else:  # if try succeeds break the outer while loop and continue to setting value
                     break
@@ -131,6 +133,9 @@ def calculate_tiles():
             row_dm = row_index % 2 != 0 and dm_short_row or dm_long_row  # select correct dm for even/odd rows
             if val is None:
                 local_tiles[row_index][column_index] = 'desert'
+                continue
+            if val == 'oce':
+                local_tiles[row_index][column_index] = 'ocean'
                 continue
             tries = 0
             while tries < 1000:

@@ -52,7 +52,7 @@ class BoardDrawing(object):
         for y, row in enumerate(self.numbers):
             for x, val in enumerate(row):
                 # self.drawing.extend(self._draw_coordinates(*self._get_hexagon_coords(x, y), x, y))
-                if not val:
+                if not val or isinstance(val, str):
                     continue
                 number, weight, letter = val
                 self.drawing.extend(self._draw_number(*self._get_hexagon_coords(x, y), number))
