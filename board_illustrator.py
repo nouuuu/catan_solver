@@ -7,7 +7,7 @@ from numpy.random import randint
 
 class BoardDrawing(object):
     #if printed on A1 350 is the appropriate tile size
-    TILE_SIZE = 350
+    TILE_SIZE = 345
     HALF_TILE = TILE_SIZE / 2
     QUARTER_TILE = TILE_SIZE / 4
     STROKE = TILE_SIZE / 30
@@ -37,8 +37,8 @@ class BoardDrawing(object):
         self.drawing = draw.Drawing((self.shape[1] - 2.5) * self.TILE_SIZE,
                                     (self.shape[0] - 1.5) * self.TILE_SIZE * self.HEX_COEFF,
                                     overflow="hidden")
-        self.drawing.viewBox = (-self.QUARTER_TILE, -self.QUARTER_TILE, self.drawing.width,
-                                self.drawing.height)
+        self.drawing.viewBox = (-self.QUARTER_TILE, -self.QUARTER_TILE/2, self.drawing.width -self.QUARTER_TILE,
+                                self.drawing.height -self.QUARTER_TILE/2)
         self._init_tile_images()
 
     def generate_board_outline(self):
