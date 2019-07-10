@@ -6,7 +6,8 @@ from numpy.random import randint
 
 
 class BoardDrawing(object):
-    TILE_SIZE = 300
+    #if printed on A1 350 is the appropriate tile size
+    TILE_SIZE = 350
     HALF_TILE = TILE_SIZE / 2
     QUARTER_TILE = TILE_SIZE / 4
     STROKE = TILE_SIZE / 30
@@ -19,7 +20,8 @@ class BoardDrawing(object):
         "sheep": "img/production/Sheep_med.png",
         "wheat": "img/production/Wheat_med.png",
         "wood": "img/production/Wood_med.png",
-        "ocean": "img/production/Ocean_med.png"
+        "ocean": "img/production/Ocean_med.png",
+        "question_mark" : "img/production/question_mark.png"
     }
 
     NEIGHBOURS = {0: [(-1, 0), (-1, -1), (0, -1), (1, -1), (1, 0), (0, 1)],
@@ -49,7 +51,7 @@ class BoardDrawing(object):
     def write_numbers(self):
         for y, row in enumerate(self.numbers):
             for x, val in enumerate(row):
-                #self.drawing.extend(self._draw_coordinates(*self._get_hexagon_coords(x, y), x, y))
+                # self.drawing.extend(self._draw_coordinates(*self._get_hexagon_coords(x, y), x, y))
                 if not val:
                     continue
                 number, weight, letter = val
@@ -71,7 +73,7 @@ class BoardDrawing(object):
                        transform=f"rotate({rotation},{x},{y})", **{"stroke-width": self.STROKE})
 
     def _draw_number(self, x, y, val):
-        text = draw.Text(str(val), self.FONT_SIZE, x, -(y), center=True)
+        text = draw.Text(str(val), self.FONT_SIZE, x-1, -(y-2), center=True)
         circle = draw.Circle(x, -(y + 4), r=self.FONT_SIZE * 0.75, fill="beige", stroke="black")
         return [circle, text]
 
@@ -95,21 +97,26 @@ class BoardDrawing(object):
                 tile_layout[i] = [filler] + row + [filler]
             else:
                 tile_layout[i] = [filler] + row[1:] + [filler, filler]
-
         return [[filler] * (row_len + 2)] + tile_layout + [[filler] * (row_len + 2)]
 
     def draw_harbours(self, harbour_list):
         for col, row, adj_tiles, harbour_type in harbour_list:
             c_x, c_y = self._get_hexagon_coords(col, row)
-            t = draw.Text(harbour_type, 42, c_x, -c_y, center=True, stroke="lime")
-            c = draw.Circle(c_x, -c_y, r=32, fill="white", stroke="black")
+            text = "3 : 1"
+            val = "question_mark"
+            if harbour_type[0] == "2":
+                text = "2 : 1"
+                val = harbour_type.split("_")[3]
+            t = draw.Text(text, 42, c_x, -(c_y + 50), center=True, stroke="beige")
+            c = draw.Circle(c_x, -c_y, r=42, fill=f"url(#{val})", stroke="black")
             n = set(chain.from_iterable([(a, b) for _, _, type, a, b in adj_tiles if not type == 'harbour']))
             # 0 = 90° theta, 1= 30*,  2 = -30°, 3 = - 90°
             for corner in n:
                 theta = 90 - corner * 60
                 e_x = int(self.HALF_TILE * np.math.cos(np.math.radians(theta)) + c_x)
                 e_y = int(self.HALF_TILE * np.math.sin(np.math.radians(theta)) + c_y)
-                line = draw.Line(c_x, -c_y, e_x, -e_y, **{"stroke": "red", "stroke-width": "5px"})
+                line = draw.Line(c_x, -c_y, e_x, -e_y,
+                                 **{"stroke": "black", "stroke-dasharray": "10 10", "stroke-width": "5px"})
                 self.drawing.extend([line])
             self.drawing.extend([c, t])
 
@@ -133,33 +140,3 @@ class Pattern(draw.DrawingParentElement):
 
     def __init__(self, children=(), **args):
         super().__init__(children=children, **args)
-
-
-class CatanTile(object):
-
-    def __init__(self, row, col, tile_type):
-        self.row = row
-        self.col = col
-        self.tile_type = tile_type
-
-
-class CatanLandTile(CatanTile):
-    land_types = ["wood"]
-
-    def __init__(self, row, col, tile_type, letter_value, number_value):
-        if tile_type not in self.land_types:
-            raise ValueError(f"{tile_type} is not a land tile")
-        super().__init__(row, col, tile_type)
-
-
-class CatanSeaTile(CatanTile):
-    land_types = ["sea", "harbour"]
-
-    def __init__(self, row, col, tile_type, is_harbour, harbour_connections):
-        if tile_type not in self.land_types:
-            raise ValueError(f"{tile_type} is not a sea tile")
-        super().__init__(row, col, tile_type)
-
-
-a_wood_tile = CatanLandTile(1, 2, "wood", "A", 4)
-a_harbour_tile = CatanSeaTile(1, 2, "harbour", True, [0, 4, 6])
