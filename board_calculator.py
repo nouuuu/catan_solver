@@ -50,8 +50,8 @@ dm_long_row = [[(-1, 0), (0, -1)],
 avg_weight = sum([w[1] for w in number_cards]) / len(number_cards)
 print("AVG WEIGHT-----------------")
 print(avg_weight)
-UPPER_BOUND = avg_weight + 10.25
-LOWER_BOUND = avg_weight - 10.75
+UPPER_BOUND = avg_weight + 0.5
+LOWER_BOUND = avg_weight - 0.75
 
 
 def check_constraint_weight(x, y, val, m, dm):
